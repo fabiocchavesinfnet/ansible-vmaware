@@ -1,0 +1,39 @@
+---
+  - hosts: vmware
+    remote_user: analista
+    #gather_facts: no
+    become: yes
+    tasks:
+      - name: cria uma VM ubuntu no vSphere
+        vmware_guest:
+          hostname: 192.168.181.129
+          username: administrator@vsphere.local 
+          password: Zaq1!1qaz
+          validate_certs: no
+          datacenter: Datacenter
+          folder: /
+          name: maquina de teste
+          state: poweredoff
+          guest_id: ubuntu64Guest
+          #vm_extra_config:
+          #  notes: Este e um exemplo de servidor web de producao
+          disk:
+          #  disk1:
+          - size_gb: 10
+            type: thin
+            datastore: datastore1
+          networks:
+          #  nic1:
+          - name: VM Network
+            type: dhcp
+            network: VM Network
+            network_type: standard
+          hardware:
+            memory_mb: 512
+            num_cpus: 1
+            scsi: paravirtual
+          #esxi_hostname:
+          #  datacenter: datacenter
+          #  hostname: 192.168.181.128
+        delegate_to: localhost
+        register: deploy_vm
